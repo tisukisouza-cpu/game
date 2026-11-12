@@ -22,7 +22,7 @@ uniform mat4 uMVP;
 out vec3 vColor;
 
 void main() {
-    gl_Position = uMVP * vec4(aPosition, 1.0);
+    gl_Position = vec4(aPosition * 0.5, 1.0);
     vColor = aColor;
 }
 )";
