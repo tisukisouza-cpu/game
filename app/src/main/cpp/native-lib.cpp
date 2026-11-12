@@ -16,15 +16,9 @@ static int height = 1;
 static const char* vertexShader = R"(
 #version 300 es
 layout(location = 0) in vec3 aPosition;
-layout(location = 1) in vec3 aColor;
-
-uniform mat4 uMVP;
-
-out vec3 vColor;
 
 void main() {
     gl_Position = vec4(aPosition * 0.5, 1.0);
-    vColor = aColor;
 }
 )";
 
