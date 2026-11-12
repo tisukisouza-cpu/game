@@ -98,7 +98,25 @@ public class MainActivity extends Activity {
         GLSurfaceView viewport = new GLSurfaceView(this);
         viewport.setEGLContextClientVersion(3);
         viewport.setRenderer(new NativeRenderer());
-        viewport.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        viewport.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        final boolean[] running = {false};
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                running[0] = !running[0];
+
+                if (running[0]) {
+                    play.setText("■  PARAR");
+                    viewport.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+                } else {
+                    play.setText("▶  EXECUTAR");
+                    viewport.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+                    viewport.requestRender();
+                }
+            }
+        });
         center.addView(viewport, new LinearLayout.LayoutParams(
             -1, 0, 1
         ));
@@ -120,9 +138,9 @@ public class MainActivity extends Activity {
         inspector.addView(text("INSPETOR", 12, white));
         inspector.addView(text("Cubo", 17, accent));
         inspector.addView(text("TRANSFORMAÇÃO", 11, muted));
-        inspector.addView(text("Posição\\nX: 0.0\\nY: 0.0\\nZ: 0.0", 12, white));
-        inspector.addView(text("ROTAÇÃO\\nX: 0°\\nY: 0°\\nZ: 0°", 12, white));
-        inspector.addView(text("ESCALA\\nX: 1.0\\nY: 1.0\\nZ: 1.0", 12, white));
+        inspector.addView(text("Posição\nX: 0.0\nY: 0.0\nZ: 0.0", 12, white));
+        inspector.addView(text("ROTAÇÃO\nX: 0°\nY: 0°\nZ: 0°", 12, white));
+        inspector.addView(text("ESCALA\nX: 1.0\nY: 1.0\nZ: 1.0", 12, white));
         addPanel(workspace, inspector, 175);
 
         root.addView(workspace, new LinearLayout.LayoutParams(
