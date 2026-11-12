@@ -140,7 +140,7 @@ JNIEXPORT void JNICALL
 Java_com_ravena_engine_NativeRenderer_nativeRender(
     JNIEnv*, jclass) {
 
-    glClearColor(0.025f, 0.035f, 0.055f, 1.0f);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (!program || !vbo) return;
