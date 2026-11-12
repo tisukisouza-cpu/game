@@ -146,13 +146,17 @@ JNIEXPORT void JNICALL
 Java_com_ravena_engine_NativeRenderer_nativeRender(
     JNIEnv*, jclass) {
 
-    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    if (!program) {
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    } else if (!vbo) {
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    } else {
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (!program || !vbo) {
-        LOGE("ERRO: recurso ausente. program=%u, vbo=%u", program, vbo);
-        return;
-    }
+    if (!program || !vbo) return;
 
     float aspect = (float)width / (float)height;
     float f = 1.0f / tanf(0.785398f / 2.0f);
