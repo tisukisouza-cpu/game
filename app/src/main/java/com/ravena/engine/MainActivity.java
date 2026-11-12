@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
         GLSurfaceView viewport = new GLSurfaceView(this);
         viewport.setEGLContextClientVersion(3);
         viewport.setRenderer(new NativeRenderer());
-        viewport.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        viewport.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
         final boolean[] running = {false};
 
