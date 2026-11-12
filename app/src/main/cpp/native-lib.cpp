@@ -1,6 +1,10 @@
 #include <jni.h>
 #include <GLES3/gl3.h>
 #include <cmath>
+#include <android/log.h>
+
+#define LOG_TAG "RavenaEngine"
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 static GLuint program = 0;
 static GLuint vbo = 0;
@@ -44,6 +48,9 @@ static GLuint compileShader(GLenum type, const char* source) {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
+        char log[2048] = {};
+        glGetShaderInfoLog(shader, sizeof(log), nullptr, log);
+        LOGE("Erro ao compilar shader: %s", log);
         glDeleteShader(shader);
         return 0;
     }
@@ -69,10 +76,15 @@ static void createRenderer() {
     glGetProgramiv(program, GL_LINK_STATUS, &linked);
 
     if (!linked) {
+        char log[2048] = {};
+        glGetProgramInfoLog(program, sizeof(log), nullptr, log);
+        LOGE("Erro ao vincular programa: %s", log);
         glDeleteProgram(program);
         program = 0;
         return;
     }
+
+    LOGE("Renderizador OpenGL inicializado com sucesso");
 
     const float vertices[] = {
         // Frente
