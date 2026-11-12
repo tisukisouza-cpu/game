@@ -241,6 +241,9 @@ Java_com_ravena_engine_NativeRenderer_nativeResize(
     screenHeight = height > 0 ? height : 1;
 
     glViewport(0, 0, screenWidth, screenHeight);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glDisable(GL_CULL_FACE);
 }
 
 extern "C"
@@ -248,6 +251,13 @@ JNIEXPORT void JNICALL
 Java_com_ravena_engine_NativeRenderer_nativeRender(
     JNIEnv*, jclass
 ) {
+    glViewport(0, 0, screenWidth, screenHeight);
+
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glClearDepthf(1.0f);
+
     glClearColor(0.035f, 0.045f, 0.065f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -257,10 +267,7 @@ Java_com_ravena_engine_NativeRenderer_nativeRender(
     createMatrices(mvp);
 
     glUseProgram(program);
-
-    glUniformMatrix4fv(
-        mvpLocation, 1, GL_FALSE, mvp
-    );
+    glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, mvp);
 
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
