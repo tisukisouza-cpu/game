@@ -8,6 +8,7 @@
 
 static GLuint program = 0;
 static GLuint vbo = 0;
+static int shaderError = 0;
 static float angle = 0.0f;
 static int width = 1;
 static int height = 1;
@@ -51,6 +52,7 @@ static GLuint compileShader(GLenum type, const char* source) {
         char log[2048] = {};
         glGetShaderInfoLog(shader, sizeof(log), nullptr, log);
         LOGE("Erro ao compilar shader: %s", log);
+        shaderError = (type == GL_VERTEX_SHADER) ? 1 : 2;
         glDeleteShader(shader);
         return 0;
     }
@@ -65,6 +67,7 @@ static void createRenderer() {
     if (!vs || !fs) return;
 
     program = glCreateProgram();
+    if (!program) shaderError = 4;
     glAttachShader(program, vs);
     glAttachShader(program, fs);
     glLinkProgram(program);
@@ -76,6 +79,7 @@ static void createRenderer() {
     glGetProgramiv(program, GL_LINK_STATUS, &linked);
 
     if (!linked) {
+        shaderError = 3;
         char log[2048] = {};
         glGetProgramInfoLog(program, sizeof(log), nullptr, log);
         LOGE("Erro ao vincular programa: %s", log);
@@ -146,10 +150,14 @@ JNIEXPORT void JNICALL
 Java_com_ravena_engine_NativeRenderer_nativeRender(
     JNIEnv*, jclass) {
 
-    if (!program) {
+    if (shaderError == 1) {
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-    } else if (!vbo) {
+    } else if (shaderError == 2) {
+        glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    } else if (shaderError == 3) {
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    } else if (shaderError == 4) {
+        glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
     } else {
         glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     }
