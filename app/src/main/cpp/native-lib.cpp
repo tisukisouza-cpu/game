@@ -116,6 +116,12 @@ static void createRenderer() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    LOGE("Diagnostico: program=%u, vbo=%u, vertices=%zu",
+         program, vbo, sizeof(vertices) / (6 * sizeof(float)));
+    LOGE("OpenGL: %s", glGetString(GL_VERSION));
+    LOGE("GPU: %s", glGetString(GL_RENDERER));
+    LOGE("Erro OpenGL apos criar VBO: 0x%x", glGetError());
+
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -143,7 +149,10 @@ Java_com_ravena_engine_NativeRenderer_nativeRender(
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (!program || !vbo) return;
+    if (!program || !vbo) {
+        LOGE("ERRO: recurso ausente. program=%u, vbo=%u", program, vbo);
+        return;
+    }
 
     float aspect = (float)width / (float)height;
     float f = 1.0f / tanf(0.785398f / 2.0f);
@@ -195,6 +204,11 @@ Java_com_ravena_engine_NativeRenderer_nativeRender(
                           6 * sizeof(float), (void*)(3 * sizeof(float)));
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        LOGE("Erro ao desenhar o cubo: 0x%x", error);
+    }
 
     angle += 0.01f;
 }
