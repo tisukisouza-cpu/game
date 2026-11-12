@@ -1,6 +1,7 @@
 package com.ravena.engine;
 
 import android.app.Activity;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -94,7 +95,10 @@ public class MainActivity extends Activity {
         LinearLayout center = column();
         center.addView(text("VISUALIZAÇÃO 3D     |     PERSPECTIVA", 11, muted));
 
-        View viewport = new Viewport();
+        GLSurfaceView viewport = new GLSurfaceView(this);
+        viewport.setEGLContextClientVersion(3);
+        viewport.setRenderer(new NativeRenderer());
+        viewport.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         center.addView(viewport, new LinearLayout.LayoutParams(
             -1, 0, 1
         ));

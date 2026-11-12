@@ -29,8 +29,13 @@ jobs:
         with:
           packages: 'platform-tools'
 
-      - name: Instalar componentes Android
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Instalar SDK, NDK e CMake
+        run: |
+          sdkmanager --install \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
+            "ndk;27.2.12479018" \
+            "cmake;3.22.1"
 
       - name: Compilar APK
         run: gradle assembleDebug
